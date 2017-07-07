@@ -1,13 +1,14 @@
 
 
 declare module "simple_consumer" {
+    import * as tls from 'tls';
     import * as Kafka from "kafka";
     import { BaseConsumer } from "base_consumer";
 
     export class SimpleConsumer extends BaseConsumer {
         constructor(options?: SimpleConsumerOptions);
-        // commitOffset(commits: Commit[]): Promise<any>;
-        fetchOffset(commits: Commit | Commit[]): Promise<number[]>;  
+        commitOffset(commits: Commit[]): Promise<any>;
+        fetchOffset(commits: Commit | Commit[]): Promise<{topic: string, offset: number}[]>;  
     }
 
     export interface SimpleConsumerOptions {
@@ -16,7 +17,7 @@ declare module "simple_consumer" {
          * fetching offsets. 
          * Default: "no-kafka-group-v0"
          */
-        groupId: string;
+        groupId?: string;
         /**
          * `maxWaitTime` - maximum amount of time in 
          * milliseconds to block waiting if insufficient 
@@ -24,13 +25,13 @@ declare module "simple_consumer" {
          * 
          * default: 100ms
          */
-        maxWaitTime: number;
+        maxWaitTime?: number;
         /**
          * `idleTimeout` - timeout between fetch calls.
          * 
          * default: 1000ms
          */
-        idleTimeout: number;
+        idleTimeout?: number;
         /**
          * `minBytes` - minimum number of bytes to 
          * wait from Kafka before returning the fetch call.
@@ -98,6 +99,10 @@ declare module "simple_consumer" {
         handlerConcurrency?: number;
 
         brokerRedirection?: Kafka.BrokerRedirectionFunction | Kafka.BrokerRedirectionMap;
+
+        ssl?: tls.ConnectionOptions;
+
+        logger?: Kafka.Logger;
     }
 
 
