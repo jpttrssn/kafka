@@ -171,6 +171,7 @@ declare module "producer" {
         topic: string;
         partition: number;
         offset: number;
+        error: any;
     }
 
     export interface SendOptions {
